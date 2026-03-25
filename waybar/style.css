@@ -49,8 +49,15 @@ window#waybar {
 
 #tray {
     padding: 0 8px;
+    background: transparent;
+    color: #919191;
 }
 
 #tray > .passive {
     -gtk-icon-effect: dim;
+}
+
+#tray menu {
+    background: rgba(48, 48, 48, 0.95);
+    color: #C2C2C2;
 }
