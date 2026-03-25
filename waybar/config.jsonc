@@ -1,0 +1,64 @@
+{
+    "layer": "top",
+    "position": "bottom",
+    "height": 28,
+    "spacing": 0,
+    "modules-left": ["hyprland/workspaces"],
+    "modules-right": ["cpu", "temperature", "memory", "network", "pulseaudio", "battery", "clock", "tray"],
+
+    "hyprland/workspaces": {
+        "format": "{id}",
+        "on-click": "activate",
+        "sort-by-number": true
+    },
+
+    "cpu": {
+        "interval": 5,
+        "format": " {usage}%",
+        "tooltip": false
+    },
+
+    "temperature": {
+        "thermal-zone": 0,
+        "format": " {temperatureC}°C",
+        "tooltip": false
+    },
+
+    "memory": {
+        "interval": 5,
+        "format": " {percentage}%",
+        "tooltip": false
+    },
+
+    "network": {
+        "interface": "wlp2s0",
+        "format-wifi": " {essid}",
+        "format-disconnected": " Disconnected",
+        "tooltip": false
+    },
+
+    "pulseaudio": {
+        "format": " {volume}%",
+        "format-muted": " Muted",
+        "on-click": "pavucontrol",
+        "tooltip": false
+    },
+
+    "battery": {
+        "bat": "BAT0",
+        "interval": 10,
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "format-charging": " {capacity}%",
+        "tooltip": false
+    },
+
+    "clock": {
+        "format": " {:%b %d at %H:%M}",
+        "tooltip": false
+    },
+
+    "tray": {
+        "spacing": 8
+    }
+}
