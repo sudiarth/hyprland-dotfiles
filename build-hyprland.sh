@@ -56,7 +56,7 @@ apt install -y \
     libtomlplusplus-dev \
     libzip-dev librsvg2-dev libxcb-render-util0-dev \
     libpam0g-dev libsdbus-c++-dev \
-    libpugixml-dev \
+    libpugixml-dev libmagic-dev \
     libmtdev-dev libevdev-dev libwacom-dev \
     check python3-pytest python3-attr \
     autoconf automake libtool xutils-dev xcb-proto \
