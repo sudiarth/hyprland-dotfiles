@@ -6,7 +6,8 @@
 #
 # Builds everything in order, skipping already-installed components:
 #   hyprutils -> hyprlang -> hyprcursor -> hyprwayland-scanner ->
-#   libinput (1.26.0) -> aquamarine -> Hyprland -> hyprlock -> hypridle
+#   libinput (1.26.0) -> aquamarine -> xcb-errors -> Hyprland ->
+#   hyprlock -> hypridle
 #
 # Safe to re-run -- picks up where it left off.
 #
@@ -58,6 +59,7 @@ apt install -y \
     libpugixml-dev \
     libmtdev-dev libevdev-dev libwacom-dev \
     check python3-pytest python3-attr \
+    autoconf automake libtool xutils-dev xcb-proto \
     cpio jq git
 
 mkdir -p "$BUILD_DIR"
@@ -140,6 +142,23 @@ if pkg-config --exists aquamarine 2>/dev/null; then
     echo ""; echo "=== aquamarine already installed, skipping ==="
 else
     build_cmake aquamarine https://github.com/hyprwm/aquamarine.git v0.3.1
+fi
+
+if pkg-config --exists xcb-errors 2>/dev/null; then
+    echo ""; echo "=== xcb-errors already installed, skipping ==="
+else
+    echo ""
+    echo "--- Building libxcb-errors (1.0.1) ---"
+    cd "$BUILD_DIR"
+    [ -d "libxcb-errors" ] && rm -rf "libxcb-errors"
+    sudo -u "$REAL_USER" git clone --depth 1 \
+        https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git libxcb-errors
+    cd libxcb-errors
+    ./autogen.sh --prefix=/usr
+    make -j"$JOBS"
+    make install
+    ldconfig
+    echo "  libxcb-errors installed."
 fi
 
 if command -v Hyprland &>/dev/null; then
