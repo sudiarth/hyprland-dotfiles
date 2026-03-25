@@ -8,7 +8,8 @@
 # Usage:
 #   git clone https://github.com/sudiarth/hyprland-dotfiles
 #   cd hyprland-dotfiles
-#   sudo ./install.sh
+#   sudo ./build-hyprland.sh   # Build Hyprland v0.42.0 from source first
+#   sudo ./install.sh          # Then install configs and tools
 #
 # After install, log out and select "Hyprland" from the session menu.
 # =============================================================================
@@ -25,20 +26,22 @@ REAL_HOME=$(eval echo "~$REAL_USER")
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # =============================================================================
-# 1. Add Hyprland PPA (not in Ubuntu 24.04 repos)
+# 1. Check if Hyprland is installed (built from source via build-hyprland.sh)
 # =============================================================================
-echo "=== Adding Hyprland repository ==="
-if ! apt-cache policy hyprland 2>/dev/null | grep -q "Candidate"; then
-    # Try the community PPA for Ubuntu
-    add-apt-repository -y ppa:hyprwm/hyprland 2>/dev/null || {
-        echo ""
-        echo "WARNING: Hyprland PPA not available."
-        echo "You may need to build Hyprland from source."
-        echo "See: https://wiki.hyprland.org/Getting-Started/Installation/"
-        echo ""
-        echo "Continuing with other packages..."
-    }
+if ! command -v Hyprland &>/dev/null; then
+    echo ""
+    echo "ERROR: Hyprland is not installed."
+    echo ""
+    echo "  Ubuntu 24.04 requires building Hyprland from source."
+    echo "  Run the build script first:"
+    echo ""
+    echo "    sudo ./build-hyprland.sh"
+    echo ""
+    echo "  Then re-run this install script."
+    exit 1
 fi
+
+echo "=== Hyprland found: $(Hyprland --version 2>&1 | head -1) ==="
 
 # =============================================================================
 # 2. Install packages
@@ -72,17 +75,6 @@ apt install -y \
     breeze-icon-theme \
     breeze-cursor-theme \
     papirus-icon-theme
-
-# Install Hyprland and ecosystem (may fail if PPA not available)
-echo ""
-echo "=== Installing Hyprland ==="
-apt install -y hyprland hyprlock hypridle 2>/dev/null || {
-    echo ""
-    echo "WARNING: Could not install Hyprland from package manager."
-    echo "You will need to install Hyprland manually."
-    echo "See: https://wiki.hyprland.org/Getting-Started/Installation/"
-    echo ""
-}
 
 # =============================================================================
 # 3. Install Poppins font
@@ -224,8 +216,4 @@ echo "  Settings apps:"
 echo "    pavucontrol          Sound / Volume"
 echo "    nm-connection-editor Network / WiFi"
 echo "    blueman-manager      Bluetooth"
-echo ""
-echo "  NOTE: If Hyprland was not installed via"
-echo "  package manager, build it from source:"
-echo "  https://wiki.hyprland.org/Getting-Started/Installation/"
 echo ""
