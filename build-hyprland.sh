@@ -6,7 +6,7 @@
 #
 # Builds everything in order, skipping already-installed components:
 #   hyprutils -> hyprlang -> hyprcursor -> hyprwayland-scanner ->
-#   aquamarine -> Hyprland -> hyprlock -> hypridle
+#   libinput (1.26.0) -> aquamarine -> Hyprland -> hyprlock -> hypridle
 #
 # Safe to re-run -- picks up where it left off.
 #
@@ -56,6 +56,8 @@ apt install -y \
     libzip-dev librsvg2-dev libxcb-render-util0-dev \
     libpam0g-dev libsdbus-c++-dev \
     libpugixml-dev \
+    libmtdev-dev libevdev-dev libwacom-dev \
+    check python3-pytest python3-attr \
     cpio jq git
 
 mkdir -p "$BUILD_DIR"
@@ -76,6 +78,25 @@ build_cmake() {
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -S . -B build -G Ninja
     cmake --build build -j"$JOBS"
     cmake --install build
+    ldconfig
+    echo "  $name ($tag) installed."
+}
+
+# =============================================================================
+# Helper: build a meson project (clone, build, install)
+# =============================================================================
+build_meson() {
+    local name="$1" repo="$2" tag="$3" extra_opts="${4:-}"
+
+    echo ""
+    echo "--- Building $name ($tag) ---"
+    cd "$BUILD_DIR"
+    [ -d "$name" ] && rm -rf "$name"
+    sudo -u "$REAL_USER" git clone --recursive --depth 1 -b "$tag" "$repo" "$name"
+    cd "$name"
+    meson setup build --prefix=/usr --buildtype=release $extra_opts
+    ninja -C build -j"$JOBS"
+    ninja -C build install
     ldconfig
     echo "  $name ($tag) installed."
 }
@@ -106,6 +127,13 @@ if command -v hyprwayland-scanner &>/dev/null; then
     echo ""; echo "=== hyprwayland-scanner already installed, skipping ==="
 else
     build_cmake hyprwayland-scanner https://github.com/hyprwm/hyprwayland-scanner.git v0.4.0
+fi
+
+if pkg-config --atleast-version=1.26.0 libinput 2>/dev/null; then
+    echo ""; echo "=== libinput >= 1.26.0 already installed, skipping ==="
+else
+    build_meson libinput https://gitlab.freedesktop.org/libinput/libinput.git 1.26.0 \
+        "-Ddocumentation=false -Dtests=false -Ddebug-gui=false"
 fi
 
 if pkg-config --exists aquamarine 2>/dev/null; then
