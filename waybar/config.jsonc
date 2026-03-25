@@ -3,6 +3,9 @@
     "position": "bottom",
     "height": 28,
     "spacing": 0,
+    "margin-left": 22,
+    "margin-right": 22,
+    "margin-bottom": 6,
     "modules-left": ["hyprland/workspaces"],
     "modules-right": ["cpu", "temperature", "memory", "network", "pulseaudio", "battery", "clock", "tray"],
 
