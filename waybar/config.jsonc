@@ -7,7 +7,7 @@
     "margin-right": 11,
     "margin-bottom": 6,
     "modules-left": ["hyprland/workspaces"],
-    "modules-right": ["cpu", "temperature", "memory", "network", "pulseaudio", "battery", "clock", "tray"],
+    "modules-right": ["cpu", "temperature", "memory", "custom/warp", "network", "pulseaudio", "battery", "clock", "tray"],
 
     "hyprland/workspaces": {
         "format": "{id}",
@@ -63,5 +63,13 @@
 
     "tray": {
         "spacing": 8
+    },
+
+    "custom/warp": {
+        "exec": "status=$(warp-cli --accept-tos status 2>/dev/null | head -1 | awk '{print $NF}'); if [ \"$status\" = 'Connected' ]; then echo ' WARP'; else echo ' OFF'; fi",
+        "interval": 10,
+        "on-click": "warp-cli --accept-tos connect",
+        "on-click-right": "warp-cli --accept-tos disconnect",
+        "tooltip": false
     }
 }

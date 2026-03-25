@@ -43,6 +43,7 @@ window#waybar {
 #temperature { color: #919191; }
 #memory { color: #919191; }
 #network { color: #C2C2C2; }
+#custom-warp { color: #C2C2C2; padding: 0 10px; }
 #pulseaudio { color: #C2C2C2; }
 #battery { color: #C2C2C2; }
 #clock { color: #F2F2F2; }
