@@ -151,7 +151,7 @@ else
     echo "--- Building libxcb-errors (1.0.1) ---"
     cd "$BUILD_DIR"
     [ -d "libxcb-errors" ] && rm -rf "libxcb-errors"
-    sudo -u "$REAL_USER" git clone --depth 1 \
+    sudo -u "$REAL_USER" git clone --recursive --depth 1 \
         https://gitlab.freedesktop.org/xorg/lib/libxcb-errors.git libxcb-errors
     cd libxcb-errors
     ./autogen.sh --prefix=/usr
